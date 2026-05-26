@@ -509,8 +509,8 @@ function buildPesan(data) {
 
   return `${header}
 
-Yth. ${nama || '[Nama Customer]'},
-perkenalkan saya Asep dari Tim Operasional ReCharge bahwa
+Yth.Bapak/Ibu ${nama || '[Nama Customer]'},
+Perkenalkan saya Asep dari Tim Operasional ReCharge Ingin Konfirmasi bahwa
 ${detail}
 
 Detail Jadwal:
@@ -520,11 +520,8 @@ Mesin   : ${nomor || '-'}${jenisMesin ? '\n Tipe Mesin  : '+jenisMesin : ''}
 Tanggal     : ${tanggalFmt}
 Jam         : ${jam || '-'}
 Lokasi      : ${lokasi || '-'}
-${extra}───────────────────
+${catatan ? `Alamat:\n${catatan}\n\n` : ''}tim kami akan di lokasi pada waktu yang telah dijadwalkan.
 
-${catatan ? `📝 Catatan:\n${catatan}\n\n` : ''}tim kami akan di lokasi pada waktu yang telah dijadwalkan.
-
-Jika ada pertanyaan, balas pesan ini.
 
 Terima kasih 🙏
 Tim Operasional ReCharge`;
