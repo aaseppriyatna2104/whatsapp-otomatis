@@ -378,12 +378,12 @@
         <label>Tipe Mesin</label>
         <select id="tipe-mesin" onchange="updatePreview()">
           <option value="">Pilih tipe...</option>
-          <option>Mesin Ldx Large</option>
-          <option>Mesin Ldx Medium</option>
-          <option>Mesin Ldx Small</option>
-          <option>Mesin Nas Large</option>
-          <option>Mesin Nas Medium</option>
-          <option>Mesin Nas Small</option>
+          <option>Ldx Large</option>
+          <option>Ldx Medium</option>
+          <option>Ldx Small</option>
+          <option>Nas Large</option>
+          <option>Nas Medium</option>
+          <option>Nas Small</option>
         </select>
       </div>
     </div>
@@ -494,7 +494,7 @@ function buildPesan(data) {
     penarikan:   'KONFIRMASI PENARIKAN MESIN',
     pemindahan:  'KONFIRMASI PEMINDAHAN MESIN',
     penukaran:   'KONFIRMASI PENUKARAN MESIN',
-  }[tipe] || '⚙️ *KONFIRMASI MESIN*';
+  }[tipe] || 'KONFIRMASI MESIN';
 
   const detail = {
     pemasangan: `Mesin ReCharge akan dipasang di lokasi Anda.`,
@@ -504,23 +504,22 @@ function buildPesan(data) {
   }[tipe] || '';
 
   let extra = '';
-  if (tipe === 'pemindahan' && lokasiTujuan) extra = `📍 Lokasi Tujuan : ${lokasiTujuan}\n`;
-  if (tipe === 'penukaran' && mesinPengganti) extra = `🔁 Mesin Baru   : ${mesinPengganti}\n`;
+  if (tipe === 'pemindahan' && lokasiTujuan) extra = `Lokasi Tujuan : ${lokasiTujuan}\n`;
+  if (tipe === 'penukaran' && mesinPengganti) extra = `Mesin Baru   : ${mesinPengganti}\n`;
 
   return `${header}
 
 Yth. ${nama || '[Nama Customer]'},
 perkenalkan saya Asep dari Tim Operasional ReCharge bahwa
-
 ${detail}
 
 📋 Detail Jadwal:
 ───────────────────
 Nama PIC       : ${nama || '-'}
-Mesin   : ${nomor || '-'}${jenisMesin ? '\n📦 Tipe Mesin  : '+jenisMesin : ''}
-📅 Tanggal     : ${tanggalFmt}
-🕐 Jam         : ${jam || '-'}
-📍 Lokasi      : ${lokasi || '-'}
+Mesin   : ${nomor || '-'}${jenisMesin ? '\n Tipe Mesin  : '+jenisMesin : ''}
+Tanggal     : ${tanggalFmt}
+Jam         : ${jam || '-'}
+Lokasi      : ${lokasi || '-'}
 ${extra}───────────────────
 
 ${catatan ? `📝 Catatan:\n${catatan}\n\n` : ''}tim kami akan di lokasi pada waktu yang telah dijadwalkan.
