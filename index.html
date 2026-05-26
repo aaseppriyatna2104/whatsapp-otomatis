@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sistem Konfirmasi Mesin — WhatsApp Otomatis</title>
+  <style>
+    :root {
+      --green: #1D9E75;
+      --green-light: #E1F5EE;
+      --green-dark: #0F6E56;
+      --amber: #BA7517;
+      --amber-light: #FAEEDA;
+      --gray: #5F5E5A;
+      --gray-light: #F1EFE8;
+      --border: #D3D1C7;
+      --white: #ffffff;
+      --text: #2C2C2A;
+      --text-muted: #888780;
+      --radius: 10px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #F1EFE8;
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: var(--green-dark);
+      color: white;
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    header .icon {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    header h1 { font-size: 1.2rem; font-weight: 600; }
+    header p  { font-size: 0.85rem; opacity: 0.8; margin-top: 2px; }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow);
+    }
+
+    .card-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--gray-light);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--gray);
+    }
+
+    .form-group label span.req { color: var(--amber); }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      color: var(--text);
+      background: #FAFAF8;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(29,158,117,0.12);
+      background: white;
+    }
+
+    .form-group textarea { resize: vertical; min-height: 80px; }
+
+    /* Tipe Konfirmasi Selector */
+    .type-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .type-card {
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #FAFAF8;
+    }
+
+    .type-card:hover { border-color: var(--green); }
+
+    .type-card input[type="radio"] { display: none; }
+
+    .type-card.selected {
+      border-color: var(--green);
+      background: var(--green-light);
+    }
+
+    .type-card .emoji { font-size: 1.3rem; }
+    .type-card .label { font-size: 0.88rem; font-weight: 500; }
+    .type-card .sub   { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* Preview pesan */
+    .preview-box {
+      background: #DCF8C6;
+      border-radius: 12px 12px 0 12px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      white-space: pre-line;
+      border: 1px solid #B5E5A0;
+      position: relative;
+      min-height: 100px;
+    }
+
+    .preview-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .wa-dot {
+      width: 8px; height: 8px;
+      background: #25D366;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-submit:hover    { background: var(--green-dark); }
+    .btn-submit:active   { transform: scale(0.98); }
+    .btn-submit:disabled { background: var(--text-muted); cursor: not-allowed; }
+
+    /* Status log */
+    #status-log {
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+      display: none;
+    }
+
+    .log-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--gray-light);
+      background: white;
+    }
+
+    .log-item:last-child { border-bottom: none; }
+
+    .log-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    .log-dot.ok    { background: var(--green); }
+    .log-dot.wait  { background: var(--amber); animation: pulse 1s infinite; }
+    .log-dot.error { background: #E24B4A; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+
+    .log-text   { flex: 1; }
+    .log-time   { color: var(--text-muted); font-size: 0.75rem; white-space: nowrap; }
+
+    /* API Config */
+    .config-toggle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: white;
+    }
+
+    .config-panel {
+      background: var(--amber-light);
+      border: 1px solid #FAC775;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 520px) {
+      .form-row   { grid-template-columns: 1fr; }
+      .type-grid  { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <div class="icon">⚙️</div>
+    <div>
+      <h1>Sistem Konfirmasi Mesin</h1>
+      <p>Kirim pesan WhatsApp otomatis via Fonnte API</p>
+    </div>
+  </header>
+
+  <!-- Konfigurasi API -->
+  <div class="card">
+    <div class="card-title">🔑 Konfigurasi API</div>
+
+    <div class="config-panel">
+      <strong style="font-size:0.85rem">Cara setup Fonnte:</strong>
+      <ol style="font-size:0.82rem;margin-top:6px;padding-left:1.2rem;line-height:1.8">
+        <li>Daftar di <a href="https://fonnte.com" target="_blank">fonnte.com</a></li>
+        <li>Tambah device → scan QR WhatsApp</li>
+        <li>Copy token dari dashboard</li>
+        <li>Masukkan token di bawah ini</li>
+      </ol>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Token Fonnte <span class="req">*</span></label>
+        <input type="password" id="fonnte-token" placeholder="Paste token Fonnte..." />
+      </div>
+      <div class="form-group">
+        <label>Google Sheets Web App URL</label>
+        <input type="url" id="sheets-url" value="https://script.google.com/macros/s/AKfycby7lYkxED6m0niTpZIDz5TEH0TlxOWHWW4PIktPSEmx-mwO_iAgwaoYX92o93Wdw4GL/exec" placeholder="https://script.google.com/..." />
+      </div>
+    </div>
+
+    <div class="form-group" style="flex-direction:row;align-items:center;gap:8px;margin-bottom:0">
+      <input type="checkbox" id="save-config" style="width:16px;height:16px;" />
+      <label for="save-config" style="font-size:0.85rem">Simpan konfigurasi di browser (localStorage)</label>
+    </div>
+  </div>
+
+  <!-- Tipe Konfirmasi -->
+  <div class="card">
+    <div class="card-title">📋 Tipe Konfirmasi</div>
+    <div class="type-grid" id="type-grid">
+      <label class="type-card selected" onclick="selectType(this,'pemasangan')">
+        <input type="radio" name="tipe" value="pemasangan" checked />
+        <div>
+          <div class="emoji">🔧</div>
+          <div class="label">Pemasangan</div>
+          <div class="sub">Install mesin baru</div>
+        </div>
+      </label>
+      <label class="type-card" onclick="selectType(this,'penarikan')">
+        <input type="radio" name="tipe" value="penarikan" />
+        <div>
+          <div class="emoji">📤</div>
+          <div class="label">Penarikan</div>
+          <div class="sub">Ambil / cabut mesin</div>
+        </div>
+      </label>
+      <label class="type-card" onclick="selectType(this,'pemindahan')">
+        <input type="radio" name="tipe" value="pemindahan" />
+        <div>
+          <div class="emoji">🚚</div>
+          <div class="label">Pemindahan</div>
+          <div class="sub">Pindah lokasi mesin</div>
+        </div>
+      </label>
+      <label class="type-card" onclick="selectType(this,'penukaran')">
+        <input type="radio" name="tipe" value="penukaran" />
+        <div>
+          <div class="emoji">🔄</div>
+          <div class="label">Penukaran</div>
+          <div class="sub">Tukar unit mesin</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- Form Data -->
+  <div class="card">
+    <div class="card-title">👤 Data Customer & Jadwal</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nama Customer <span class="req">*</span></label>
+        <input type="text" id="nama" placeholder="Budi Santoso" oninput="updatePreview()" />
+      </div>
+      <div class="form-group">
+        <label>No. WhatsApp <span class="req">*</span></label>
+        <input type="tel" id="wa" placeholder="08123456789" oninput="updatePreview()" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nomor Mesin <span class="req">*</span></label>
+        <input type="text" id="nomor-mesin" placeholder="MSN-2024-001" oninput="updatePreview()" />
+      </div>
+      <div class="form-group">
+        <label>Tipe Mesin</label>
+        <select id="tipe-mesin" onchange="updatePreview()">
+          <option value="">Pilih tipe...</option>
+          <option>Mesin ATM</option>
+          <option>Mesin EDC</option>
+          <option>Mesin Vending</option>
+          <option>Mesin Fotokopi</option>
+          <option>Mesin CNC</option>
+          <option>Lainnya</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Tanggal Jadwal <span class="req">*</span></label>
+        <input type="date" id="tanggal" oninput="updatePreview()" />
+      </div>
+      <div class="form-group">
+        <label>Jam</label>
+        <input type="time" id="jam" value="09:00" oninput="updatePreview()" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Lokasi / Alamat</label>
+      <input type="text" id="lokasi" placeholder="Jl. Sudirman No.5, Jakarta Pusat" oninput="updatePreview()" />
+    </div>
+
+    <div id="field-pemindahan" style="display:none">
+      <div class="form-group">
+        <label>Lokasi Tujuan (Pemindahan)</label>
+        <input type="text" id="lokasi-tujuan" placeholder="Jl. Thamrin No.10, Jakarta Pusat" oninput="updatePreview()" />
+      </div>
+    </div>
+
+    <div id="field-penukaran" style="display:none">
+      <div class="form-group">
+        <label>Nomor Mesin Pengganti (Penukaran)</label>
+        <input type="text" id="mesin-pengganti" placeholder="MSN-2024-002" oninput="updatePreview()" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Catatan Tambahan</label>
+      <textarea id="catatan" rows="3" placeholder="Info tambahan untuk customer..." oninput="updatePreview()"></textarea>
+    </div>
+  </div>
+
+  <!-- Preview Pesan -->
+  <div class="card">
+    <div class="card-title">👁️ Preview Pesan WhatsApp</div>
+    <div class="preview-label">
+      <span class="wa-dot"></span> Tampilan di WhatsApp customer
+    </div>
+    <div class="preview-box" id="preview-pesan">
+      Isi form di atas untuk melihat preview pesan...
+    </div>
+  </div>
+
+  <!-- Status Log -->
+  <div id="status-log" class="card" style="padding:0">
+    <div id="log-items"></div>
+  </div>
+
+  <!-- Submit -->
+  <button class="btn-submit" onclick="submitForm()" id="btn-submit">
+    <span>📲</span> Kirim Konfirmasi WhatsApp
+  </button>
+
+  <p style="text-align:center;font-size:0.78rem;color:var(--text-muted);margin-top:1rem">
+    Data akan disimpan ke Google Sheets + pesan dikirim via Fonnte
+  </p>
+
+</div>
+
+<script>
+// ─── State ───────────────────────────────────────────
+let tipeAktif = 'pemasangan';
+
+// Load saved config
+window.onload = () => {
+  const token = localStorage.getItem('fonnte_token');
+  const url   = localStorage.getItem('sheets_url');
+  const SHEETS_DEFAULT = 'https://script.google.com/macros/s/AKfycby7lYkxED6m0niTpZIDz5TEH0TlxOWHWW4PIktPSEmx-mwO_iAgwaoYX92o93Wdw4GL/exec';
+  if (token) { document.getElementById('fonnte-token').value = token; document.getElementById('save-config').checked = true; }
+  // Gunakan URL dari localStorage jika ada, fallback ke URL default Google Script
+  document.getElementById('sheets-url').value = url || SHEETS_DEFAULT;
+
+  // Set default date = today
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('tanggal').value = today;
+  updatePreview();
+};
+
+// ─── Pilih Tipe ───────────────────────────────────────
+function selectType(el, tipe) {
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  tipeAktif = tipe;
+
+  document.getElementById('field-pemindahan').style.display = tipe === 'pemindahan' ? 'block' : 'none';
+  document.getElementById('field-penukaran').style.display  = tipe === 'penukaran'  ? 'block' : 'none';
+  updatePreview();
+}
+
+// ─── Template Pesan ───────────────────────────────────
+function buildPesan(data) {
+  const { nama, nomor, tipe, mesin, jenisMesin, tanggal, jam, lokasi, lokasiTujuan, mesinPengganti, catatan } = data;
+
+  const tanggalFmt = tanggal
+    ? new Date(tanggal + 'T00:00').toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' })
+    : '[tanggal]';
+
+  const header = {
+    pemasangan:  '🔧 *KONFIRMASI PEMASANGAN MESIN*',
+    penarikan:   '📤 *KONFIRMASI PENARIKAN MESIN*',
+    pemindahan:  '🚚 *KONFIRMASI PEMINDAHAN MESIN*',
+    penukaran:   '🔄 *KONFIRMASI PENUKARAN MESIN*',
+  }[tipe] || '⚙️ *KONFIRMASI MESIN*';
+
+  const detail = {
+    pemasangan: `Mesin baru akan dipasang di lokasi Anda.`,
+    penarikan:  `Mesin di lokasi Anda akan kami tarik kembali.`,
+    pemindahan: `Mesin Anda akan kami pindahkan ke lokasi baru.`,
+    penukaran:  `Mesin lama Anda akan kami tukar dengan unit baru.`,
+  }[tipe] || '';
+
+  let extra = '';
+  if (tipe === 'pemindahan' && lokasiTujuan) extra = `📍 Lokasi Tujuan : ${lokasiTujuan}\n`;
+  if (tipe === 'penukaran' && mesinPengganti) extra = `🔁 Mesin Baru   : ${mesinPengganti}\n`;
+
+  return `${header}
+
+Yth. ${nama || '[Nama Customer]'},
+
+${detail}
+
+📋 Detail Jadwal:
+───────────────────
+👤 Nama        : ${nama || '-'}
+🔩 No. Mesin   : ${nomor || '-'}${jenisMesin ? '\n📦 Tipe Mesin  : '+jenisMesin : ''}
+📅 Tanggal     : ${tanggalFmt}
+🕐 Jam         : ${jam || '-'}
+📍 Lokasi      : ${lokasi || '-'}
+${extra}───────────────────
+
+${catatan ? `📝 Catatan:\n${catatan}\n\n` : ''}Mohon pastikan ada yang menerima tim kami di lokasi pada waktu yang telah dijadwalkan.
+
+Jika ada pertanyaan, balas pesan ini.
+
+Terima kasih 🙏
+Tim Layanan Mesin`;
+}
+
+// ─── Update Preview ────────────────────────────────────
+function updatePreview() {
+  const data = getFormData();
+  document.getElementById('preview-pesan').textContent = buildPesan(data);
+}
+
+function getFormData() {
+  return {
+    nama:            document.getElementById('nama').value.trim(),
+    nomor:           document.getElementById('nomor-mesin').value.trim(),
+    tipe:            tipeAktif,
+    jenisMesin:      document.getElementById('tipe-mesin').value,
+    tanggal:         document.getElementById('tanggal').value,
+    jam:             document.getElementById('jam').value,
+    lokasi:          document.getElementById('lokasi').value.trim(),
+    lokasiTujuan:    document.getElementById('lokasi-tujuan').value.trim(),
+    mesinPengganti:  document.getElementById('mesin-pengganti').value.trim(),
+    catatan:         document.getElementById('catatan').value.trim(),
+    noWA:            document.getElementById('wa').value.trim(),
+  };
+}
+
+// ─── Format No WA ─────────────────────────────────────
+function formatWA(no) {
+  no = no.replace(/\D/g, '');
+  if (no.startsWith('0')) no = '62' + no.slice(1);
+  if (!no.startsWith('62')) no = '62' + no;
+  return no;
+}
+
+// ─── Tambah Log ───────────────────────────────────────
+function addLog(msg, status = 'wait') {
+  const log = document.getElementById('status-log');
+  const items = document.getElementById('log-items');
+  log.style.display = 'block';
+
+  const div = document.createElement('div');
+  div.className = 'log-item';
+  const waktu = new Date().toLocaleTimeString('id-ID');
+  div.innerHTML = `
+    <span class="log-dot ${status}"></span>
+    <span class="log-text">${msg}</span>
+    <span class="log-time">${waktu}</span>
+  `;
+  items.prepend(div);
+  return div;
+}
+
+function updateLog(el, msg, status) {
+  el.querySelector('.log-text').textContent = msg;
+  el.querySelector('.log-dot').className = `log-dot ${status}`;
+}
+
+// ─── Kirim ke Google Sheets ───────────────────────────
+async function kirimKeSheets(data, pesan) {
+  const url = document.getElementById('sheets-url').value.trim();
+  if (!url) return { ok: true, skip: true };
+
+  const payload = { ...data, pesan, timestamp: new Date().toISOString() };
+
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    return { ok: res.ok };
+  } catch (e) {
+    return { ok: false, error: e.message };
+  }
+}
+
+// ─── Kirim WhatsApp via Fonnte ────────────────────────
+async function kirimWA(noWA, pesan, token) {
+  const res = await fetch('https://api.fonnte.com/send', {
+    method: 'POST',
+    headers: {
+      'Authorization': token,
+    },
+    body: (() => {
+      const fd = new FormData();
+      fd.append('target', formatWA(noWA));
+      fd.append('message', pesan);
+      return fd;
+    })(),
+  });
+
+  const json = await res.json();
+  return json;
+}
+
+// ─── Submit Utama ─────────────────────────────────────
+async function submitForm() {
+  const data  = getFormData();
+  const token = document.getElementById('fonnte-token').value.trim();
+
+  // Validasi
+  if (!data.nama)    return alert('Nama customer wajib diisi.');
+  if (!data.noWA)    return alert('Nomor WhatsApp wajib diisi.');
+  if (!data.nomor)   return alert('Nomor mesin wajib diisi.');
+  if (!data.tanggal) return alert('Tanggal jadwal wajib diisi.');
+  if (!token)        return alert('Token Fonnte wajib diisi di bagian Konfigurasi API.');
+
+  // Simpan config jika dipilih
+  if (document.getElementById('save-config').checked) {
+    localStorage.setItem('fonnte_token', token);
+    localStorage.setItem('sheets_url', document.getElementById('sheets-url').value.trim());
+  }
+
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.innerHTML = '<span>⏳</span> Memproses...';
+
+  const pesan = buildPesan(data);
+
+  // 1. Simpan ke Sheets
+  const logSheets = addLog('Menyimpan data ke Google Sheets...', 'wait');
+  const sheetsRes = await kirimKeSheets(data, pesan);
+  if (sheetsRes.skip) {
+    updateLog(logSheets, 'Google Sheets URL tidak dikonfigurasi — dilewati.', 'ok');
+  } else if (sheetsRes.ok) {
+    updateLog(logSheets, '✅ Data berhasil disimpan ke Google Sheets.', 'ok');
+  } else {
+    updateLog(logSheets, `⚠️ Gagal simpan ke Sheets: ${sheetsRes.error}`, 'error');
+  }
+
+  // 2. Kirim WhatsApp
+  const logWA = addLog(`Mengirim WhatsApp ke ${formatWA(data.noWA)}...`, 'wait');
+  try {
+    const waRes = await kirimWA(data.noWA, pesan, token);
+    if (waRes.status) {
+      updateLog(logWA, `✅ WhatsApp terkirim ke ${formatWA(data.noWA)}!`, 'ok');
+      addLog('Selesai — konfirmasi berhasil dikirim.', 'ok');
+    } else {
+      updateLog(logWA, `❌ Gagal kirim WA: ${waRes.reason || 'Unknown error'}`, 'error');
+    }
+  } catch (e) {
+    updateLog(logWA, `❌ Error: ${e.message}`, 'error');
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '<span>📲</span> Kirim Konfirmasi WhatsApp';
+}
+</script>
+</body>
+</html>
