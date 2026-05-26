@@ -490,17 +490,17 @@ function buildPesan(data) {
     : '[tanggal]';
 
   const header = {
-    pemasangan:  '🔧 *KONFIRMASI PEMASANGAN MESIN*',
-    penarikan:   '📤 *KONFIRMASI PENARIKAN MESIN*',
-    pemindahan:  '🚚 *KONFIRMASI PEMINDAHAN MESIN*',
-    penukaran:   '🔄 *KONFIRMASI PENUKARAN MESIN*',
+    pemasangan:  'KONFIRMASI PEMASANGAN MESIN',
+    penarikan:   'KONFIRMASI PENARIKAN MESIN',
+    pemindahan:  'KONFIRMASI PEMINDAHAN MESIN',
+    penukaran:   'KONFIRMASI PENUKARAN MESIN',
   }[tipe] || '⚙️ *KONFIRMASI MESIN*';
 
   const detail = {
-    pemasangan: `Mesin baru akan dipasang di lokasi Anda.`,
-    penarikan:  `Mesin di lokasi Anda akan kami tarik kembali.`,
-    pemindahan: `Mesin Anda akan kami pindahkan ke lokasi baru.`,
-    penukaran:  `Mesin lama Anda akan kami tukar dengan unit baru.`,
+    pemasangan: `Mesin ReCharge akan dipasang di lokasi Anda.`,
+    penarikan:  `Mesin ReCharge di lokasi Anda akan kami tarik.`,
+    pemindahan: `Mesin ReCharge akan kami pindahkan ke lokasi baru.`,
+    penukaran:  `Mesin ReCharge akan kami tukar dengan unit baru.`,
   }[tipe] || '';
 
   let extra = '';
@@ -510,24 +510,25 @@ function buildPesan(data) {
   return `${header}
 
 Yth. ${nama || '[Nama Customer]'},
+perkenalkan saya Asep dari Tim Operasional ReCharge bahwa
 
 ${detail}
 
 📋 Detail Jadwal:
 ───────────────────
-👤 Nama        : ${nama || '-'}
-🔩 No. Mesin   : ${nomor || '-'}${jenisMesin ? '\n📦 Tipe Mesin  : '+jenisMesin : ''}
+Nama PIC       : ${nama || '-'}
+Mesin   : ${nomor || '-'}${jenisMesin ? '\n📦 Tipe Mesin  : '+jenisMesin : ''}
 📅 Tanggal     : ${tanggalFmt}
 🕐 Jam         : ${jam || '-'}
 📍 Lokasi      : ${lokasi || '-'}
 ${extra}───────────────────
 
-${catatan ? `📝 Catatan:\n${catatan}\n\n` : ''}Mohon pastikan ada yang menerima tim kami di lokasi pada waktu yang telah dijadwalkan.
+${catatan ? `📝 Catatan:\n${catatan}\n\n` : ''}tim kami akan di lokasi pada waktu yang telah dijadwalkan.
 
 Jika ada pertanyaan, balas pesan ini.
 
 Terima kasih 🙏
-Tim Layanan Mesin`;
+Tim Operasional ReCharge`;
 }
 
 // ─── Update Preview ────────────────────────────────────
